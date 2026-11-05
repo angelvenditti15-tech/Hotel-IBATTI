@@ -2,47 +2,47 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Huéspedes | Hotel IBATTI</title>
 </head>
 <body>
-    <main>
-        <h1>Huéspedes de Hotel IBATTI</h1>
 
-        <p><a th:href="@{/huespedes/nuevo}">Nuevo huésped</a></p>
-        <p><a th:href="@{/}">Volver al inicio</a></p>
+    <h1>Huéspedes de Hotel IBATTI</h1>
 
-        <p role="status" th:if="${mensaje != null}" th:text="${mensaje}"></p>
-        <p th:if="${huespedes.isEmpty()}">Todavía no hay huéspedes registrados.</p>
+    <p><a th:href="@{/huespedes/nuevo}">Nuevo huésped</a></p>
+    <p><a th:href="@{/}">Volver al inicio</a></p>
 
-        <table th:unless="${huespedes.isEmpty()}">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">DNI</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="huesped : ${huespedes}">
-                    <td th:text="${huesped.id()}"></td>
-                    <td th:text="${huesped.nombre()}"></td>
-                    <td th:text="${huesped.apellido()}"></td>
-                    <td th:text="${huesped.dni()}"></td>
-                    <td>
-                        <a th:href="@{/huespedes/{id}/editar(id=${huesped.id()})}">Editar</a>
+    <p role="status" th:if="${mensaje != null}" th:text="${mensaje}"></p>
+    <p th:if="${huespedes.isEmpty()}">Todavía no hay huéspedes registrados.</p>
 
-                        <form method="post"
-                              th:action="@{/huespedes/{id}/eliminar(id=${huesped.id()})}"
-                              onsubmit="return confirm('¿Querés eliminar este huésped?')">
-                            <button type="submit">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+    <table th:unless="${huespedes.isEmpty()}">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="huesped : ${huespedes}">
+                <td th:text="${huesped.id}"></td>
+                <td th:text="${huesped.nombre}"></td>
+                <td th:text="${huesped.apellido}"></td>
+                <td th:text="${huesped.dni}"></td>
+                <td>
+                    <a th:href="@{/huespedes/{id}/editar(id=${huesped.id})}">Editar</a>
+                    
+                    <form method="post" 
+                          th:action="@{/huespedes/{id}/eliminar(id=${huesped.id})}" 
+                          onsubmit="return confirm('¿Querés eliminar este huésped?')" 
+                          style="display:inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>
