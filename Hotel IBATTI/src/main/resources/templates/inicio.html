@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${nombreHotel}">Hotel IBATTI</title>
+</head>
+<body>
+    <main>
+        <h1 th:text="${nombreHotel}">Hotel IBATTI</h1>
+        <p>Sistema de gestión de reservas</p>
+
+        <nav aria-label="Menú principal">
+            <p><a th:href="@{/reservas}">Ver reservas</a></p>
+            <p><a th:href="@{/huespedes}">Ver huéspedes</a></p>
+            <p><a th:href="@{/habitaciones}">Ver habitaciones</a></p>
+        </nav>
+    </main>
+</body>
+</html>

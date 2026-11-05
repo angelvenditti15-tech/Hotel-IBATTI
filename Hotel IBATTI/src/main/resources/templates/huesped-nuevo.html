@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${id == null ? 'Nuevo huésped | Hotel IBATTI' : 'Editar huésped | Hotel IBATTI'}">
+        Huéspedes | Hotel IBATTI
+    </title>
+</head>
+<body>
+    <main>
+        <h1 th:text="${id == null ? 'Nuevo huésped' : 'Editar huésped'}">
+            Nuevo huésped
+        </h1>
+
+        <p><a th:href="@{/huespedes}">Volver a huéspedes</a></p>
+        <p role="alert" th:if="${error != null}" th:text="${error}"></p>
+
+        <form method="post"
+              th:action="${id == null} ? @{/huespedes} : @{/huespedes/{id}/editar(id=${id})}">
+            <p>
+                <label for="nombre">Nombre</label>
+                <input id="nombre" name="nombre" th:value="${nombre}" required>
+            </p>
+
+            <p>
+                <label for="apellido">Apellido</label>
+                <input id="apellido" name="apellido" th:value="${apellido}" required>
+            </p>
+
+            <p>
+                <label for="dni">DNI (sin puntos)</label>
+                <input id="dni" name="dni" inputmode="numeric" pattern="[0-9]{7,8}"
+                       th:value="${dni}" required>
+            </p>
+
+            <p>
+                <label for="email">Correo electrónico (opcional)</label>
+                <input id="email" name="email" type="email" th:value="${email}">
+            </p>
+
+            <p>
+                <label for="telefono">Teléfono (opcional)</label>
+                <input id="telefono" name="telefono" type="tel" th:value="${telefono}">
+            </p>
+
+            <button type="submit"
+                    th:text="${id == null ? 'Guardar huésped' : 'Guardar cambios'}">
+                Guardar huésped
+            </button>
+        </form>
+    </main>
+</body>
+</html>

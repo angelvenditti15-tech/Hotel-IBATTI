@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${id == null ? 'Nueva habitación | Hotel IBATTI' : 'Editar habitación | Hotel IBATTI'}">
+        Habitaciones | Hotel IBATTI
+    </title>
+</head>
+<body>
+    <main>
+        <h1 th:text="${id == null ? 'Nueva habitación' : 'Editar habitación'}">
+            Nueva habitación
+        </h1>
+        <p><a th:href="@{/habitaciones}">Volver a habitaciones</a></p>
+        <p role="alert" th:if="${error != null}" th:text="${error}"></p>
+        <p th:if="${id == null and hoteles.isEmpty()}">
+            Primero tiene que haber un hotel registrado.
+        </p>
+
+        <form method="post"
+              th:if="${id != null or !hoteles.isEmpty()}"
+              th:action="${id == null} ? @{/habitaciones} : @{/habitaciones/{id}/editar(id=${id})}">
+            <p th:if="${id == null}">
+                <label for="hotelId">Hotel</label>
+                <select id="hotelId" name="hotelId" required>
+                    <option value="">Elegí un hotel</option>
+                    <option th:each="opcion : ${hoteles}"
+                            th:value="${opcion.id()}"
+                            th:text="${opcion.nombre()}"
+                            th:selected="${hotelId == ('' + opcion.id())}"></option>
+                </select>
+            </p>
+
+            <p th:if="${id != null}">Hotel: <strong th:text="${hotel}"></strong></p>
+
+            <p>
+                <label for="numero">Número</label>
+                <input id="numero" name="numero" type="number" min="1"
+                       th:value="${numero}" required>
+            </p>
+
+            <p>
+                <label for="tipo">Tipo</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Elegí un tipo</option>
+                    <option th:each="opcion : ${tipos}"
+                            th:value="${opcion.name()}"
+                            th:text="${opcion.name()}"
+                            th:selected="${tipo == opcion.name()}"></option>
+                </select>
+            </p>
+
+            <p>
+                <label for="capacidad">Capacidad</label>
+                <input id="capacidad" name="capacidad" type="number" min="1"
+                       th:value="${capacidad}" required>
+            </p>
+
+            <p>
+                <label for="precio">Precio por noche</label>
+                <input id="precio" name="precio" type="number" min="0.01"
+                       max="9999999999.99" step="0.01" th:value="${precio}" required>
+            </p>
+
+            <button type="submit"
+                    th:text="${id == null ? 'Guardar habitación' : 'Guardar cambios'}">
+                Guardar habitación
+            </button>
+        </form>
+    </main>
+</body>
+</html>

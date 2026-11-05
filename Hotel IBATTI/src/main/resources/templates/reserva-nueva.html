@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nueva reserva | Hotel IBATTI</title>
+</head>
+<body>
+    <main>
+        <h1>Nueva reserva</h1>
+        <p><a th:href="@{/reservas}">Volver a reservas</a></p>
+        <p role="alert" th:if="${error != null}" th:text="${error}"></p>
+
+        <p th:if="${habitaciones.isEmpty()}">No hay habitaciones activas para reservar.</p>
+        <p th:if="${huespedes.isEmpty()}">Primero registrá un huésped.</p>
+
+        <form method="post" th:action="@{/reservas}"
+              th:if="${!habitaciones.isEmpty() and !huespedes.isEmpty()}">
+            <p>
+                <label for="huespedId">Huésped</label>
+                <select id="huespedId" name="huespedId" required>
+                    <option value="">Elegí un huésped</option>
+                    <option th:each="opcion : ${huespedes}"
+                            th:value="${opcion.id()}"
+                            th:text="|${opcion.etiqueta()} (ID ${opcion.id()})|"
+                            th:selected="${huespedId == ('' + opcion.id())}"></option>
+                </select>
+            </p>
+
+            <p>
+                <label for="habitacionId">Habitación</label>
+                <select id="habitacionId" name="habitacionId" required>
+                    <option value="">Elegí una habitación</option>
+                    <option th:each="opcion : ${habitaciones}"
+                            th:value="${opcion.id()}"
+                            th:text="${opcion.etiqueta()}"
+                            th:selected="${habitacionId == ('' + opcion.id())}"></option>
+                </select>
+            </p>
+
+            <p>
+                <label for="ingreso">Ingreso</label>
+                <input id="ingreso" name="ingreso" type="date" th:value="${ingreso}" required>
+            </p>
+
+            <p>
+                <label for="salida">Salida</label>
+                <input id="salida" name="salida" type="date" th:value="${salida}" required>
+            </p>
+
+            <p>
+                <label for="personas">Cantidad de personas</label>
+                <input id="personas" name="personas" type="number" min="1"
+                       th:value="${personas}" required>
+            </p>
+
+            <button type="submit">Guardar reserva</button>
+        </form>
+    </main>
+</body>
+</html>

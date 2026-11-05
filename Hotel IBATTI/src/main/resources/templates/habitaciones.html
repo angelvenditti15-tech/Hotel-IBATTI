@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Habitaciones | Hotel IBATTI</title>
+</head>
+<body>
+    <main>
+        <h1>Habitaciones de Hotel IBATTI</h1>
+        <p><a th:href="@{/habitaciones/nueva}">Nueva habitación</a></p>
+        <p><a th:href="@{/}">Volver al inicio</a></p>
+
+        <p role="status" th:if="${mensaje != null}" th:text="${mensaje}"></p>
+        <p th:if="${habitaciones.isEmpty()}">Todavía no hay habitaciones registradas.</p>
+
+        <table th:unless="${habitaciones.isEmpty()}">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Hotel</th>
+                    <th scope="col">Número</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Capacidad</th>
+                    <th scope="col">Precio por noche</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="habitacion : ${habitaciones}">
+                    <td th:text="${habitacion.id()}"></td>
+                    <td th:text="${habitacion.hotel()}"></td>
+                    <td th:text="${habitacion.numero()}"></td>
+                    <td th:text="${habitacion.tipo()}"></td>
+                    <td th:text="${habitacion.capacidad()}"></td>
+                    <td th:text="${habitacion.precioPorNoche()}"></td>
+                    <td th:text="${habitacion.activa() ? 'Activa' : 'Inactiva'}"></td>
+                    <td>
+                        <a th:href="@{/habitaciones/{id}/editar(id=${habitacion.id()})}">
+                            Editar
+                        </a>
+
+                        <form method="post"
+                              th:action="@{/habitaciones/{id}/eliminar(id=${habitacion.id()})}"
+                              onsubmit="return confirm('¿Querés eliminar esta habitación?')">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
