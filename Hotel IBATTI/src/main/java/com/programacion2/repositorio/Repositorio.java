@@ -239,5 +239,23 @@ public class Repositorio<T> implements IRepositorio<T> {
     }
 
     }
+    @Override
+public void eliminar(Class<T> clase, Long id) {
+    PersistenceManager pm = pmf.getPersistenceManager();
+    Transaction tx = pm.currentTransaction();
+    try {
+        tx.begin();
+        T objeto = pm.getObjectById(clase, id);
+        pm.deletePersistent(objeto);
+        tx.commit();
+    } catch (Exception e) {
+        if (tx.isActive()) {
+            tx.rollback();
+        }
+        throw e;
+    } finally {
+        pm.close();
+    }
+}
 
 }

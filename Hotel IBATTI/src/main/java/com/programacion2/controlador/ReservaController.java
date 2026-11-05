@@ -9,7 +9,9 @@ import java.time.format.DateTimeParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -65,6 +67,40 @@ public class ReservaController {
 
         return mostrarFormulario(model, huespedId, habitacionId, ingreso, salida, personas);
     }
+@GetMapping("/reservas/{id}/editar")
+public String editarReserva(@PathVariable("id") Long id, Model model, RedirectAttributes redirect) {
+    try {
+        OpcionesReserva opciones = servicio.cargarOpciones();
+        model.addAttribute("huespedes", opciones.huespedes());
+        model.addAttribute("habitaciones", opciones.habitaciones());
+        return "reserva-nueva";
+    } catch (Exception e) {
+        redirect.addFlashAttribute("error", "No se pudo encontrar la reserva a editar.");
+        return "redirect:/reservas";
+        }
+    }
+@GetMapping("/reservas/{id}/eliminar")
+public String eliminarReserva(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    try {
+        // Reemplazá "eliminarReserva" por el nombre real de tu método en el servicio:
+        servicio.eliminar(id); 
+        
+        redirect.addFlashAttribute("mensaje", "Reserva eliminada con éxito.");
+    } catch (Exception e) {
+        redirect.addFlashAttribute("error", "No se pudo eliminar la reserva.");
+    }
+    return "redirect:/reservas";
+}
+@PostMapping("/reservas/{id}/eliminar")
+public String eliminarReservaPost(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    try {
+        servicio.eliminar(id);
+        redirect.addFlashAttribute("mensaje", "Reserva eliminada con éxito.");
+    } catch (Exception e) {
+        redirect.addFlashAttribute("error", "No se pudo eliminar la reserva.");
+    }
+    return "redirect:/reservas";
+}
 
     private String mostrarFormulario(Model model, String huespedId, String habitacionId,
                                      String ingreso, String salida, String personas) {

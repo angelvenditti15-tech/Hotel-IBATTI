@@ -10,4 +10,5 @@ public interface IRepositorio<T> {
 
     T consultar(Class<T> clase, int id);
     List <T> listar (Class <T> clase);
+    void eliminar(Class<T> clase, Long id);
 }

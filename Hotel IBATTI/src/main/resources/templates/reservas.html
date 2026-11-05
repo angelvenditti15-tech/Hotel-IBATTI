@@ -43,11 +43,11 @@
                 <td th:text="${reserva.salida}"></td>
                 <td th:text="${reserva.total}"></td>
                 <td>
-                    <a th:href="@{/reservas/{id}/editar(id=${reserva.id})}">Editar</a>
+                    <a th:href="@{|/reservas/${reserva.id}/editar|}">Editar</a>
                     <form method="post" 
-                          th:action="@{/reservas/{id}/eliminar(id=${reserva.id})}" 
-                          onsubmit="return confirm('¿Querés eliminar esta reserva?')" 
-                          style="display:inline;">
+                          th:action="@{|/reservas/${reserva.id}/eliminar|}" 
+                            onsubmit="return confirm('¿Querés eliminar esta reserva?')" 
+                            style="display:inline;">
                         <button type="submit">Eliminar</button>
                     </form>
                 </td>

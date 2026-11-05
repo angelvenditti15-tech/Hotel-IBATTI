@@ -17,10 +17,70 @@ import javax.jdo.Transaction;
 import org.springframework.stereotype.Repository;
 
 @Repository
+
 public class ReservaRepositorio {
 
     private final PersistenceManagerFactory fabrica;
+    public void eliminar(long id) {
+        PersistenceManager gestor = fabrica.getPersistenceManager();
+        Transaction transaccion = gestor.currentTransaction();
 
+        try {
+            transaccion.begin();
+            // Buscamos la reserva por su ID y la eliminamos con JDO
+            Reserva reserva = gestor.getObjectById(Reserva.class, id);
+            gestor.deletePersistent(reserva);
+            transaccion.commit();
+        } finally {
+            try {
+                if (transaccion.isActive()) {
+                    transaccion.rollback();
+                }
+            } finally {
+                gestor.close();
+            }
+        }
+    }
+public void guardarOActualizar(int idReserva, int huespedId, int habitacionId,
+                                     Function<DatosAlta, Reserva> prepararReserva) {
+        PersistenceManager gestor = fabrica.getPersistenceManager();
+        Transaction transaccion = gestor.currentTransaction();
+
+        try {
+            transaccion.begin();
+
+            Huesped huesped = gestor.getObjectById(Huesped.class, huespedId);
+            Habitacion habitacion = gestor.getObjectById(Habitacion.class, habitacionId);
+
+            Query<Reserva> consulta = gestor.newQuery(Reserva.class);
+            try {
+                List<Reserva> existentes = consulta.executeList().stream()
+                    .filter(r -> r.getId() != idReserva && r.getHabitacion().getId() == habitacionId)
+                    .toList();
+
+                // Eliminamos la reserva vieja para reemplazarla por la actualizada
+                Reserva vieja = gestor.getObjectById(Reserva.class, idReserva);
+                gestor.deletePersistent(vieja);
+
+                // Generamos y guardamos la nueva reserva actualizada
+                Reserva nueva = prepararReserva.apply(new DatosAlta(huesped, habitacion, existentes));
+                gestor.makePersistent(nueva);
+                gestor.flush();
+            } finally {
+                consulta.closeAll();
+            }
+
+            transaccion.commit();
+        } finally {
+            try {
+                if (transaccion.isActive()) {
+                    transaccion.rollback();
+                }
+            } finally {
+                gestor.close();
+            }
+        }
+    }
     public ReservaRepositorio(PersistenceManagerFactory fabrica) {
         this.fabrica = fabrica;
     }

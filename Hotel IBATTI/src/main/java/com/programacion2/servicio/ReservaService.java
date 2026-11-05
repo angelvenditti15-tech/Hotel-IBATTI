@@ -18,6 +18,7 @@ import javax.jdo.JDOObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+
 public class ReservaService {
 
     private final ReservaRepositorio repositorio;
@@ -34,7 +35,9 @@ public class ReservaService {
             .sorted(Comparator.comparingInt(FilaReserva::id))
             .toList();
     }
-
+public void eliminar(Long id) {
+    repositorio.eliminar(id);
+}
     public OpcionesReserva cargarOpciones() {
         return repositorio.cargarOpciones();
     }
@@ -76,7 +79,42 @@ public class ReservaService {
             );
         }
     }
+public void actualizarReserva(int id, int huespedId, int habitacionId, LocalDate ingreso,
+                                LocalDate salida, int personas) {
+        if (personas < 1) {
+            throw new IllegalArgumentException("Ingresá al menos una persona.");
+        }
 
+        try {
+            // Buscamos la reserva existente en el repositorio o la actualizamos
+            repositorio.guardarOActualizar(id, huespedId, habitacionId, datos -> {
+                Habitacion habitacion = datos.habitacion();
+
+                if (!habitacion.isActiva()) {
+                    throw new IllegalArgumentException("La habitación seleccionada está inactiva.");
+                }
+
+                if (personas > habitacion.getCapacidad()) {
+                    throw new IllegalArgumentException(
+                        "La habitación " + habitacion.getNumero()
+                            + " admite hasta " + habitacion.getCapacidad() + " personas."
+                    );
+                }
+
+                validarDisponibilidad(habitacionId, ingreso, salida, datos.existentes());
+
+                long noches = ChronoUnit.DAYS.between(ingreso, salida);
+                BigDecimal total = habitacion.getPrecioPorNoche()
+                    .multiply(BigDecimal.valueOf(noches));
+
+                return new Reserva(datos.huesped(), habitacion, ingreso, salida, personas, total);
+            });
+        } catch (JDOObjectNotFoundException error) {
+            throw new IllegalArgumentException(
+                "El huésped o la habitación seleccionada ya no está disponible.", error
+            );
+        }
+    }
     public void validarDisponibilidad(int habitacionId, LocalDate ingreso,
                                       LocalDate salida, Iterable<Reserva> reservasExistentes) {
         if (ingreso == null || salida == null) {
@@ -105,8 +143,12 @@ public class ReservaService {
                     && salida.isAfter(existente.getFechaIngreso())) {
                 throw new IllegalStateException(
                     "La habitación ya tiene una reserva para esas fechas."
+                    
                 );
             }
         }
+
     }
+    
 }
+
