@@ -1,9 +1,9 @@
 # Hotel IBATTI - Sistema de Gestión de Reservas
 
 ## Integrantes
+- Luka Ibarra
+- Francisco Petenatti
 - Venditti Angel
-- [Nombre de tu compañero 2]
-- [Nombre de tu compañero 3]
 
 ## Descripción
 Aplicación web desarrollada en Java con Spring Boot para administrar de forma integral las reservas de un hotel. Utiliza MySQL como motor de persistencia y Thymeleaf para las vistas de la interfaz de usuario[cite: 7].
